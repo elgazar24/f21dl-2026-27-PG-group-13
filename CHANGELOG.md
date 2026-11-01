@@ -59,7 +59,7 @@ commit that changes the repo must be recorded here.
 
 ## [1.1.0] - 2026-11-02
 
-### Changed - Mon 2 Nov 2026 - @melgazar - commit: `$CommitID`
+### Changed - Mon 2 Nov 2026 - @melgazar - commit: `5923352`
 
 1. **DS3 unification** - merged the pre-split `Training_CKD_dataset.csv`
    (21,000 rows) and `Testing_CKD_dataset.csv` (4,800 rows) into a single
