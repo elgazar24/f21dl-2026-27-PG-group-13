@@ -39,7 +39,7 @@ It is a large multi-class dataset (20,538 patients, 5 risk levels), with no miss
 |---|---|---|---|---|
 | Name | [UCI Chronic Kidney Disease](https://archive.ics.uci.edu/dataset/336/chronic+kidney+disease) | [Kidney Disease Dataset](https://www.kaggle.com/datasets/amanik000/kidney-disease-dataset) | [CKD Clinical Dataset](https://www.kaggle.com/datasets/priyankabarik/chronic-kidney-disease-ckd-clinical-dataset) | [BD-KDD](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/MB1LES) |
 | Source | UCI | Kaggle | Kaggle | Harvard Dataverse |
-| Records | 400 | 20,538 | 21,000 | 988 |
+| Records | 400 | 20,538 | 25,800 | 988 |
 | Features | 24 | 42 | 35 | 24 |
 | Target | yes/no | 5 risk levels | 5 CKD stages | yes/no |
 | Missing data | 60% of rows | none | none | none |
