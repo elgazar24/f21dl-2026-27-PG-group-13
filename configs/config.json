@@ -75,6 +75,10 @@
                     "final": {
                         "train": "final_data/DS1_train.csv",
                         "test": "final_data/DS1_test.csv"
+                    },
+                    "preprocessed": {
+                        "train": "preprocessed_data/DS1_train.csv",
+                        "test": "preprocessed_data/DS1_test.csv"
                     }
                 },
                 "selected_features": [
