@@ -61,17 +61,17 @@
                 },
                 "files": {
                     "original": {
-                        "data": "original_data/chronic_kidney_disease.csv"
+                        "data": "0_original_data/chronic_kidney_disease.csv"
                     },
                     "cleaned": [
-                        "cleaned_data/DS1_cleaned.csv"
+                        "1_cleaned_data/DS1_cleaned.csv"
                     ],
                     "feature_engineered": [
-                        "feature_engineered_data/DS1_feature_engineered.csv"
+                        "2_feature_engineered_data/DS1_feature_engineered.csv"
                     ],
                     "preprocessed": {
-                        "train": "preprocessed_data/DS1_train.csv",
-                        "test": "preprocessed_data/DS1_test.csv"
+                        "train": "3_preprocessed_data/DS1_train.csv",
+                        "test": "3_preprocessed_data/DS1_test.csv"
                     }
                 },
                 "selected_features": [
