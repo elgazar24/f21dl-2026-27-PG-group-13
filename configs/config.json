@@ -69,6 +69,9 @@
                     "processed": [
                         "processed_data/DS1_processed.csv"
                     ],
+                    "feature_engineered": [
+                        "feature_engineered_data/DS1_feature_engineered.csv"
+                    ],
                     "final": {
                         "train": "final_data/DS1_train.csv",
                         "test": "final_data/DS1_test.csv"
@@ -76,20 +79,20 @@
                 },
                 "selected_features": [
                     "hemo",
-                    "rbcc",
                     "sg",
-                    "sc",
+                    "bu_sc_interaction",
+                    "htn",
                     "pot",
-                    "bu",
+                    "dm",
+                    "log_bu",
+                    "bp",
                     "bgr",
                     "wbcc",
                     "appet",
                     "pe",
                     "pc",
-                    "pcv",
                     "su",
-                    "ane",
-                    "rbc"
+                    "rbcc"
                 ]
             },
             "DS2": {
