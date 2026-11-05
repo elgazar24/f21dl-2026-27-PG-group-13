@@ -1,2 +1,7 @@
 \section{Related Work}
-\todo[5cm]{Past CKD studies, why our methods, research gap.}
+
+Before starting, we reviewed earlier work on the tabular CKD dataset to decide where we could do something different. Polat et al.\cite{polat2017} used an \glossterm{svm}{SVM} with \glossterm{featsel}{feature selection}. Qin et al.\cite{qin2020} compared six models and filled missing values with \glossterm{knnimp}{kNN imputation}. Two things stood out. Both papers focus mainly on accuracy, which can hide how well the smaller class is predicted. It is also not clear whether the gaps were filled using all the data, including the test set, which can make results look better than they really are. We split the data before any preprocessing. We evaluate with \glossterm{macrof1}{macro F1}. We also use clustering to see whether the data has any natural structure before relying on the labels.
+
+Unlike these studies, we also have an image dataset. Here we looked at Islam et al.,\cite{islam2022} who compared CNNs (VGG16, ResNet, Inception) with \glossterm{vit}{vision transformers} on about 12,400 kidney CT scans (normal, \glossterm{cyst}{cyst}, \glossterm{stone}{stone}, \glossterm{tumour}{tumour}). In their study, CNNs worked well on kidney CT images, and the best transformer was only slightly better. Since CNNs are simpler to build and train, we use a CNN for our images.
+
+\vspace{3\baselineskip}

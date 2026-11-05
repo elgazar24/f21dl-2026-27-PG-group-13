@@ -2,6 +2,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
+\usepackage{microtype}
+\usepackage[symbol*,perpage,hang]{footmisc}
+\setlength{\footnotemargin}{1em}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{setspace}
@@ -12,4 +15,6 @@
 \usepackage{enumitem}
 \usepackage[table]{xcolor}
 \usepackage{caption}
-\usepackage{hyperref}
+\usepackage[super,numbers,sort&compress]{natbib}
+\usepackage[hyperfootnotes=false]{hyperref}
+\makeatletter\renewcommand{\NAT@citesuper}[3]{\ifNAT@swa\unskip\textsuperscript{#1}\else\textsuperscript{#1}\fi}\makeatother

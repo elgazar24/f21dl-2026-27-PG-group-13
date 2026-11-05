@@ -1,3 +1,26 @@
 \section*{References}
 \addcontentsline{toc}{section}{References}
-\todo{One consistent citation style.}
+\begingroup
+\renewcommand{\section}[2]{}
+\makeatletter\renewcommand{\@biblabel}[1]{#1.}\makeatother
+\begin{thebibliography}{99}
+\setlength{\itemsep}{2pt}
+
+\bibitem{gbd2023ckd}
+GBD 2023 CKD Collaborators. \href{https://doi.org/10.1016/S0140-6736(25)01853-7}{Global, regional, and national burden of chronic kidney disease in adults, 1990--2023}. \textit{Lancet}, 406, 2461--2482, 2025.
+
+\bibitem{polat2017}
+Polat, H. et al. \href{https://doi.org/10.1007/s10916-017-0703-x}{Diagnosis of chronic kidney disease based on support vector machine by feature selection methods}. \textit{J. Med. Syst.}, 41, 2017.
+
+\bibitem{qin2020}
+Qin, J. et al. \href{https://doi.org/10.1109/ACCESS.2019.2963053}{A machine learning methodology for diagnosing chronic kidney disease}. \textit{IEEE Access}, 8, 20991--21002, 2020.
+
+\bibitem{islam2022}
+Islam, M.N. et al. \href{https://doi.org/10.1038/s41598-022-15634-4}{Vision transformer and explainable transfer learning models for auto detection of kidney cyst, stone and tumor from CT-radiography}. \textit{Sci. Rep.}, 12, 11440, 2022.
+
+% \bibitem{uci_ckd}
+% Rubini, L. et al. \href{https://doi.org/10.24432/C5G020}{Chronic Kidney Disease} [Dataset]. UCI Machine Learning Repository, 2015.
+% (cite in Section 3)
+
+\end{thebibliography}
+\endgroup

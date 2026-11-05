@@ -37,3 +37,11 @@
 \setlist[enumerate]{noitemsep, topsep=4pt}
 
 \newcommand{\todo}[2][0.5cm]{\par\noindent{\small\color{gray}\textbf{TODO:} #2}\par\noindent\rule{0pt}{#1}\par}
+
+% Footnotes: symbols (*, \dag, ...) restarting each page, so they never clash with numbered citations
+\setlength{\footnotesep}{9pt}
+\setlength{\skip\footins}{10pt plus 2pt}
+
+% Glossary links: \glossterm{key}{word} in the text jumps to the glossary entry
+\newcommand{\glossterm}[2]{\hyperlink{gloss:#1}{#2}}
+\newcommand{\glossentry}[2]{\item[\hypertarget{gloss:#1}{#2}]}
