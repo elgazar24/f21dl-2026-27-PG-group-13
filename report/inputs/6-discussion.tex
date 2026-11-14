@@ -2,13 +2,15 @@
 \section{Discussion}
 
 \subsection{Findings and Research Questions}
-\todo[4cm]{Why the results happened.}
+\textbf{Which classical model predicts CKD best?} kNN and Random Forest are statistically tied. Random Forest never missed a CKD case in cross-validation, which makes it the safer choice when a missed diagnosis is the costly error. The weaker results of Naive Bayes come from its independence assumption: the engineered features repeat the urea and creatinine signal, so that evidence is counted several times, and only dropping features improved it. The single tree is limited by its coarse output: with four leaves it gives only four distinct probabilities, which explains its lower ROC AUC, and its errors on the training folds were made with near-certain probabilities. \textbf{Which features matter?} All four models converge on haemoglobin and urine specific gravity, with albumin, red cell count and packed cell volume next. Every model reached its best score with at most 15 of the 30 features, and the engineered duplicates added nothing for Naive Bayes.
+\todo[2cm]{Clustering and MLP/CNN questions.}
 
 \subsection{Relation to Prior Work}
-\todo[3.5cm]{Comparison with literature.}
+Naive Bayes stayed competitive (macro F1 0.93--0.99 across its versions on test) despite strongly correlated features. This fits Domingos and Pazzani,\cite{domingos1997} who showed that it can classify well even when the assumption is badly violated, because only the ranking of the class scores has to be right; its high ROC AUC (0.98--1.00) despite threshold errors shows the same effect. Zhang\cite{zhang2004} argues that what matters is how dependencies are distributed between the classes, which is consistent with performance improving once the duplicated features were removed. The instability of a single tree and the gain from averaging many trees match the motivation for Random Forest.\cite{breiman2001} Unlike the accuracy-focused studies in Section~2,\cite{polat2017,qin2020} we report macro F1 and CKD recall on a test set that was held out before preprocessing.
 
 \subsection{Practical Implications}
-\todo[3cm]{Realism, reliability, risks.}
+The models suit different uses in screening. The decision tree is a three-question checklist on routine blood and urine tests that a clinician can apply by hand and audit, and it missed no CKD patient on the test set; its thresholds would need converting back to clinical units. Naive Bayes is the cheapest option and can still predict when some tests are missing, but it missed CKD cases and its probabilities are over-confident, so it would need a lower threshold and calibration. kNN and Random Forest are the most accurate, at the cost of interpretability; kNN also has to search all stored patients for each prediction.
 
 \subsection{Limitations and Future Work}
-\todo[3.5cm]{Limitations and next steps.}
+DS1 has only 400 patients from one source, so one test error changes accuracy by 1.25 points, and several versions of each model could not be separated on the test set. The classes separate easily on a few markers, so these scores are likely optimistic for a broader population. Future work should validate the models on an external dataset, calibrate the probabilities and tune the decision threshold for a target CKD recall.
+\todo[1.5cm]{Neural-network limitations.}
