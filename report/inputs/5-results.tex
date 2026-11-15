@@ -1,4 +1,4 @@
-\clearpage
+
 \section{Results}
 
 \subsection{Model Results}
@@ -43,7 +43,25 @@ The final tree (\fref{fig:tree}) uses only haemoglobin, specific gravity and alb
 \end{figure}
 
 \paragraph{Neural networks.}
-\todo[5cm]{MLP and CNN scores, learning curves, comparison with the best classical model.}
 
-\subsection{Further Analyses}
-\todo[6cm]{Extra experiments and why.}
+Three CNN experiments were evaluated using the validation set of DS2. Table~\ref{tab:cnn-results} compares their performance across four metrics.
+
+\begin{table}[H]
+\centering
+\caption{Validation performance of the three CNN experiments on DS2.}
+\label{tab:cnn-results}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Model & Accuracy (\%) & Weighted F1 (\%) & Balanced Acc. (\%) & ROC-AUC (\%) \\
+\midrule
+CNN V1 & 68.12 & 70.18 & 64.07 & 67.78 \\
+CNN V2 & \textbf{70.47} & \textbf{72.22} & \textbf{66.12} & \textbf{69.07} \\
+CNN V3 & 63.42 & 65.71 & 56.80 & 61.34 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+CNN V2 achieved the best validation performance across all four metrics. Its improved preprocessing, including image normalisation and random rotation augmentation, may have contributed to better generalisation. CNN V3 reduced the number of trainable parameters by approximately 97\% compared with V2, but achieved lower classification performance.
+
+CNN V2 was selected for independent test evaluation, achieving 67.11\% accuracy, 68.94\% weighted F1-score, 61.09\% balanced accuracy and 67.58\% ROC-AUC. Its test accuracy was lower than its validation accuracy and remained below the 77.18\% majority-class baseline, highlighting limitations in overall classification performance.

@@ -1,14 +1,49 @@
+\clearpage
 \section{Dataset Description and Analysis}
 
 \subsection{Dataset Overview}
-\todo[3cm]{DS1 and image data: source, license, features, statistics, peculiarities, why chosen.}
 
-\clearpage
+This project uses two independent datasets for kidney health classification: tabular clinical data and renal ultrasound images.
+
+\textbf{DS1 -- Tabular CKD Dataset:} The Chronic Kidney Disease dataset was obtained from the UCI Machine Learning Repository. It contains 400 patient records with 24 clinical features, covering demographic information, blood and urine measurements, and medical conditions. The target variable contains two classes: CKD (250 records, 62.5\%) and not CKD (150 records, 37.5\%). The original dataset contains missing values and both numerical and categorical features. It was selected to investigate CKD prediction using clinical measurements.\cite{rubini2015}
+
+\textbf{DS2 -- URI-CAD Ultrasound Dataset:} The URI-CAD dataset contains 1,985 anonymised B-mode renal ultrasound images, including 450 healthy (22.67\%) and 1,535 pathological (77.33\%) images. The dataset includes global diagnosis labels and additional annotations for kidney segmentation and local pathologies. This experiment uses the ultrasound images and global diagnosis labels to train CNN models for healthy-pathological classification.\cite{uricad2024}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{l l r l}
+\hline
+\textbf{Dataset} & \textbf{Data type} & \textbf{Samples} & \textbf{Classification labels} \\
+\hline
+DS1 & Tabular & 400 & CKD / Not CKD \\
+DS2 & Ultrasound images & 1,985 & Healthy / Pathological \\
+\hline
+\end{tabular}
+\caption{Overview of the two datasets used in this project.}
+\label{tab:dataset-overview}
+\end{table}
+
+Although both datasets investigate kidney health, they are independent and address different classification tasks. Their results are therefore evaluated separately.
+
 \subsection{Data Cleaning and Preprocessing}
 \todo[5.5cm]{Steps and why, fit on train only.}
 
 \subsection{Feature Engineering and Selection}
-\todo[7.5cm]{New features, selection method, selected features.}
+
+Feature engineering was performed on DS1 to create six additional candidate features from existing clinical measurements. These included a comorbidity count, a urea-creatinine ratio, logarithmic transformations of blood urea and serum creatinine, a combined urine abnormality score, and an interaction between blood urea and serum creatinine.
+
+The log transformations reduced the skewness of blood urea from 2.634 to 0.393 and serum creatinine from 7.510 to 1.612. The engineered features were added to the original dataset to provide additional candidate predictors for model development.
+
+Feature selection was subsequently performed using the preprocessed training data (320 records). Mutual Information and Random Forest permutation importance were used to assess feature relevance. Permutation importance was calculated using stratified 5-fold cross-validation with macro F1-score and a class-weighted Random Forest containing 300 trees. Features were ranked using the average ranking from both methods, and highly correlated features (absolute Spearman correlation greater than 0.9) were removed. The top 15 features were then saved for subsequent modelling.
+
+For DS2, no manual feature engineering or feature selection was performed. Instead, the CNN automatically learns visual features from the preprocessed ultrasound images.
+
+The log transformations reduced the skewness of blood urea from 2.634 to 0.393 and serum creatinine from 7.510 to 1.612. The engineered features were added to the original dataset, producing 30 predictor features and one target column. They were treated as candidate features for subsequent model evaluation and feature selection.
+
+Feature selection was model-dependent. ANOVA F-test selection was explored for kNN and Naive Bayes within cross-validation, while Random Forest used 15 selected features. The contribution of the engineered features was assessed through model comparison.
+
+For DS2, no manual feature engineering was performed. Instead, the CNN learns visual features automatically from the preprocessed ultrasound images.
 
 \subsection{Clustering}
 \todo[5.5cm]{Methods, choice of k, results vs labels.}
