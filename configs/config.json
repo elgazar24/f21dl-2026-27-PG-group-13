@@ -248,10 +248,7 @@
                     "processed": [
                         "processed_data/DS3_processed.csv"
                     ],
-                    "final": {
-                        "train": "final_data/DS3_train.csv",
-                        "test": "final_data/DS3_test.csv"
-                    }
+                    "final": []
                 },
                 "selected_features": [
                     "eGFR",

@@ -105,3 +105,42 @@ commit that changes the repo must be recorded here.
    the selected features (0.950 accuracy, 0.946 macro F1; all 24 features
    score 0.975 / 0.973 - the small-sample trade-off). The misplaced empty
    `random_forest/Decision_Tree.ipynb` stub was removed.
+
+## [1.2.0] - 2026-11-15
+
+### Changed - Sun 15 Nov 2026 - @melgazar - commit: `$CommitID`
+
+1. **DS1 pipeline completed** - feature engineering redone for DS1 (new
+   feature-engineered dataset with extra features), data stage folders
+   numbered in pipeline order, and feature selection and the models
+   rewired to use the preprocessed train/test split.
+2. **Classical models and comparison** - Decision Tree, kNN and Naive
+   Bayes notebooks completed, Random Forest adapted, and a model
+   comparison notebook added; Random Forest leads (CV macro F1 0.993,
+   test 0.987).
+3. **CNN and image data** - added the URI-CAD kidney-stone image dataset
+   and a first CNN notebook.
+4. **Report draft** - coursework report drafted in LaTeX, from the
+   introduction to the discussion, with figures and a compiled PDF.
+5. **Cleanup** - removed the unused DS3 train/test split from
+   `final_data/`, and brought this changelog up to date.
+
+## [1.3.0] - 2026-11-21
+
+### Changed - Sat 21 Nov 2026 - @melgazar - commit: `$CommitID`
+
+1. **CNN improvements on the URI-CAD dataset** - a series of controlled
+   experiments (V4-V6, one change each): a leakage-free group split
+   (frames of the same source video never span train/test), stone-region
+   crops from the label bounding boxes, real ultrasound augmentation,
+   balanced batches and threshold tuning. Held-out accuracy went from
+   67% (previous version) to about 88-90%, with zero false alarms, clearly
+   above the 77.3% majority baseline.
+2. **Model comparison** - a transfer-learning variant (ImageNet-pretrained
+   ResNet18) reaches 90.2% test accuracy; the same data treatment with the
+   team's own from-scratch architecture reaches 88.5%, and a smaller tuned
+   network (94K parameters instead of 12.9M) matches it at 88.1%. All
+   results are written in the respective notebooks.
+3. **Structure** - the transfer-learning experiments moved to
+   `src/notebooks/Models/CNN with TL/`; `torch` and `torchvision` added to
+   `requirements.txt` for the image models.
