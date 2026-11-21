@@ -127,7 +127,7 @@ commit that changes the repo must be recorded here.
 
 ## [1.3.0] - 2026-11-21
 
-### Changed - Sat 21 Nov 2026 - @melgazar - commit: `$CommitID`
+### Changed - Sat 21 Nov 2026 - @melgazar - commit: `e7ac44e`
 
 1. **CNN improvements on the URI-CAD dataset** - a series of controlled
    experiments (V4-V6, one change each): a leakage-free group split
