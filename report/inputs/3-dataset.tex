@@ -1,49 +1,29 @@
-\clearpage
 \section{Dataset Description and Analysis}
 
 \subsection{Dataset Overview}
 
-This project uses two independent datasets for kidney health classification: tabular clinical data and renal ultrasound images.
+\textbf{DS1 -- Tabular CKD Dataset:} The Chronic Kidney Disease dataset from the UCI Machine Learning Repository\cite{rubini2015} has 400 patient records with 24 clinical features (demographics, blood and urine measurements, medical conditions), some numerical and some categorical, with missing values. 250 patients have CKD (62.5\%) and 150 do not (37.5\%).
 
-\textbf{DS1 -- Tabular CKD Dataset:} The Chronic Kidney Disease dataset was obtained from the UCI Machine Learning Repository. It contains 400 patient records with 24 clinical features, covering demographic information, blood and urine measurements, and medical conditions. The target variable contains two classes: CKD (250 records, 62.5\%) and not CKD (150 records, 37.5\%). The original dataset contains missing values and both numerical and categorical features. It was selected to investigate CKD prediction using clinical measurements.\cite{rubini2015}
-
-\textbf{DS2 -- URI-CAD Ultrasound Dataset:} The URI-CAD dataset contains 1,985 anonymised B-mode renal ultrasound images, including 450 healthy (22.67\%) and 1,535 pathological (77.33\%) images. The dataset includes global diagnosis labels and additional annotations for kidney segmentation and local pathologies. This experiment uses the ultrasound images and global diagnosis labels to train CNN models for healthy-pathological classification.\cite{uricad2024}
-
-\begin{table}[ht]
-\centering
-\small
-\begin{tabular}{l l r l}
-\hline
-\textbf{Dataset} & \textbf{Data type} & \textbf{Samples} & \textbf{Classification labels} \\
-\hline
-DS1 & Tabular & 400 & CKD / Not CKD \\
-DS2 & Ultrasound images & 1,985 & Healthy / Pathological \\
-\hline
-\end{tabular}
-\caption{Overview of the two datasets used in this project.}
-\label{tab:dataset-overview}
-\end{table}
-
-Although both datasets investigate kidney health, they are independent and address different classification tasks. Their results are therefore evaluated separately.
+\textbf{DS2 -- URI-CAD Ultrasound Dataset:} URI-CAD\cite{uricad2024} has 1,985 anonymised B-mode renal ultrasound images, 450 healthy (22.67\%) and 1,535 pathological (77.33\%). It also has annotations for kidney segmentation and local pathologies; our main experiments use only the images and the global diagnosis labels.
 
 \subsection{Data Cleaning and Preprocessing}
-\todo[5.5cm]{Steps and why, fit on train only.}
+Cleaning DS1 (stripping whitespace, unifying yes/no values, checking for duplicates) removed no rows, but 242 of the 400 patients have at least one missing value. We split the data before any fitted step (stratified 80/20, seed 42) and learned every such step on the 320 training patients only; the test set is only transformed. Three impossible values (potassium 47 and 39, sodium 4.5), probably typing errors, were set to missing. Dropping incomplete rows would lose 197 of the 320 training patients, so we filled missing values with the training median (numeric) or the most frequent value (binary). No outliers were removed, because very high values (for example of creatinine, urea and glucose) are expected in kidney failure.
+
+Six right-skewed continuous features (glucose, urea, creatinine, white cell count and two engineered ones) were log-transformed. All numeric features were then \glossterm{standardisation}{standardised}, because kNN and clustering work on distances, and the ten binary features were encoded 0/1. The fill values and scaling were learned on all 320 training rows, so in cross-validation they include each fold's validation rows, a small leak.
 
 \subsection{Feature Engineering and Selection}
 
-Feature engineering was performed on DS1 to create six additional candidate features from existing clinical measurements. These included a comorbidity count, a urea-creatinine ratio, logarithmic transformations of blood urea and serum creatinine, a combined urine abnormality score, and an interaction between blood urea and serum creatinine.
+Before the split we added six candidate features, each computed row by row from a patient's own measurements: a comorbidity count, a urea-creatinine ratio, logarithmic transformations of blood urea and serum creatinine, a combined urine abnormality score, and an interaction between blood urea and serum creatinine.
 
-The log transformations reduced the skewness of blood urea from 2.634 to 0.393 and serum creatinine from 7.510 to 1.612. The engineered features were added to the original dataset to provide additional candidate predictors for model development.
+On the training set the log transformation reduces the skewness of urea from 2.9 to 0.4 and of creatinine from 5.0 to 1.6. With the six additions there are 30 predictors, but only 28 are distinct, because preprocessing also log-transforms urea and creatinine and so duplicates the two engineered log features.
 
-Feature selection was subsequently performed using the preprocessed training data (320 records). Mutual Information and Random Forest permutation importance were used to assess feature relevance. Permutation importance was calculated using stratified 5-fold cross-validation with macro F1-score and a class-weighted Random Forest containing 300 trees. Features were ranked using the average ranking from both methods, and highly correlated features (absolute Spearman correlation greater than 0.9) were removed. The top 15 features were then saved for subsequent modelling.
+We selected features on the 320 training patients only, using \glossterm{mutualinformation}{mutual information} and Random Forest \glossterm{permutationimportance}{permutation importance}. Permutation importance was calculated with stratified 5-fold cross-validation, macro F1 and a class-weighted Random Forest of 300 trees. Features were ranked by their average rank over both methods, and highly correlated ones (absolute Spearman correlation above 0.9) were removed. The top 15 features were kept.
 
-For DS2, no manual feature engineering or feature selection was performed. Instead, the CNN automatically learns visual features from the preprocessed ultrasound images.
+Random Forest uses these 15 features; kNN and Naive Bayes instead select features with the ANOVA F-test inside cross-validation (Section~4).
 
-The log transformations reduced the skewness of blood urea from 2.634 to 0.393 and serum creatinine from 7.510 to 1.612. The engineered features were added to the original dataset, producing 30 predictor features and one target column. They were treated as candidate features for subsequent model evaluation and feature selection.
-
-Feature selection was model-dependent. ANOVA F-test selection was explored for kNN and Naive Bayes within cross-validation, while Random Forest used 15 selected features. The contribution of the engineered features was assessed through model comparison.
-
-For DS2, no manual feature engineering was performed. Instead, the CNN learns visual features automatically from the preprocessed ultrasound images.
+For DS2 there is no feature engineering or selection; the CNN learns its features from the images.
 
 \subsection{Clustering}
-\todo[5.5cm]{Methods, choice of k, results vs labels.}
+We clustered the 320 preprocessed training patients on all 30 features without the diagnosis, using \glossterm{kmeans}{k-means},\cite{macqueen1967} \glossterm{hierarchicalclustering}{hierarchical clustering} with Ward linkage,\cite{ward1963} a \glossterm{gaussianmixture}{Gaussian mixture} fitted with EM,\cite{dempster1977} and \glossterm{dbscan}{DBSCAN}.\cite{ester1996} For the three methods that take a cluster count, \glossterm{silhouette}{silhouette}\cite{rousseeuw1987} was highest at two clusters and the dendrogram showed one clear split (\fref{fig:clusterk}), so we used two. The values are low (0.21--0.28), so the two groups overlap.
+
+We then compared the clusters with the diagnosis using the \glossterm{ari}{Adjusted Rand index}\cite{hubert1985} (ARI, 1 = perfect match, 0 = random). Hierarchical clustering reached 0.87; k-means (0.30) and the Gaussian mixture (0.34) put many CKD patients in the mostly non-CKD cluster (\fref{fig:clusters}). DBSCAN, at the best of five neighbourhood sizes, found only the dense non-CKD group and marked 63\% of patients as noise, nearly all of them CKD (ARI 0.68). One hierarchical cluster has 131 patients, 8\% with CKD (median creatinine 0.9, haemoglobin 15.0); the other has 189, all with CKD (creatinine 2.25, haemoglobin 10.9). This match is not stable. Without the two duplicated log features the ARI falls to 0.48, with the 24 original features it is 0.95, and removing one feature at a time gives values from 0.45 to 0.95 (\tref{tab:clust}).

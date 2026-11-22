@@ -1,13 +1,12 @@
 
 \section{Results}
 
-\subsection{Model Results}
 
 \paragraph{Classical models.} \tref{tab:classical} compares the final version of each classical model under identical folds and the same test set; \fref{fig:classical} shows the spread across the 50 cross-validation folds and the test confusion matrices.
 
 \begin{table}[H]
 \centering
-\caption{Final classical models on DS1. CV columns: mean of 10~$\times$~5-fold stratified cross-validation on the 320 training patients. Test columns: one evaluation on the 80 held-out patients (50 CKD, 30 not CKD).}
+\caption{Final classical models on DS1: mean of 10~$\times$~5-fold CV (320 training patients) and test set (80 patients, 50 CKD).}
 \label{tab:classical}
 \small
 \begin{tabular}{lcccccc}
@@ -27,41 +26,48 @@ Naive Bayes   & 0.966 (0.025) & 0.958 & 3  & 0.933 & 0.982 & 2 / 3 \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/classical_comparison.png}
-\caption{(a) Macro F1 of the four final classical models across the same 50 cross-validation folds. (b) Confusion matrices on the 80 test patients.}
+\caption{(a) Macro F1 of the four final models over the same 50 cross-validation folds. (b) Test confusion matrices.}
 \label{fig:classical}
 \end{figure}
 
-kNN and Random Forest are tied in cross-validation, and the test set agrees with this ranking: they differ by one patient, while Naive Bayes trails kNN by five. Only Naive Bayes misses CKD patients on the test set. Within each model, the tuning steps changed less than expected. For the Decision Tree, the fully grown, grid-tuned and pruned trees scored within 0.006 of each other in repeated CV (0.973--0.979), well inside their spread. For Naive Bayes, tuning the smoothing had no effect up to $10^{-2}$, and the mixed Gaussian--Bernoulli model was worse (0.953) than plain Gaussian NB (0.961); only removing features helped (0.966). For kNN, feature selection was the largest gain (0.976 to 0.993). In two cases the test set reversed the cross-validation order within a model (the 30-feature Naive Bayes variants and the fully grown tree score higher on test than the chosen versions), by one to four patients; we kept the CV choice, since choosing on the test set would leak it into model selection.
+kNN and Random Forest are tied in cross-validation and differ by one patient on the test set; Naive Bayes makes five more errors than kNN. Only Naive Bayes misses CKD patients on the test set. Within each model, the tuning steps changed less than expected (\tref{tab:versions}). For the Decision Tree, the fully grown, grid-tuned and pruned trees scored within 0.006 of each other in repeated CV (0.973--0.979), well inside their spread. For Naive Bayes, smoothing below $10^{-2}$ made no difference, the mixed Gaussian--Bernoulli model was worse (0.953) than plain Gaussian Naive Bayes (0.961), and keeping three features changed little (0.966). For kNN, every setting of $k$, weights and distance scored 0.958--0.980 with all 30 features (\fref{fig:knn}), so these mattered little; feature selection gave the largest gain (0.976 to 0.993) and the cluster label did not help (0.988). Twice a rejected version beat the chosen one on the test set, by one to four patients (the 30-feature Naive Bayes versions and the fully grown tree). We kept the cross-validation choice, because the test set must not be used to choose a model.
 
-The final tree (\fref{fig:tree}) uses only haemoglobin, specific gravity and albumin. These match the highest Random Forest importances (haemoglobin 0.328, specific gravity 0.157, red blood cell count 0.131) and the three features Naive Bayes kept, so all models rely on the same anaemia and urine-concentration markers.
+The final tree (\fref{fig:tree}) uses only haemoglobin, specific gravity and albumin. Haemoglobin and specific gravity also have the two highest Random Forest importances (0.328 and 0.157, before red blood cell count at 0.131) and are two of the three features Naive Bayes kept, so the three models we can inspect rely on the same anaemia and urine-concentration markers.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.62\textwidth]{figures/decision_tree.png}
-\caption{Final pruned decision tree. Thresholds are on the standardised scale (0 = training mean).}
+\caption{Final pruned Decision Tree on standardised features (hemo: haemoglobin, sg: specific gravity, al: albumin; value: [CKD, not CKD]).}
 \label{fig:tree}
 \end{figure}
 
 \paragraph{Neural networks.}
 
-Three CNN experiments were evaluated using the validation set of DS2. Table~\ref{tab:cnn-results} compares their performance across four metrics.
+\tref{tab:cnn-results} lists all CNN experiments; \fref{fig:cnn} shows the other validation metrics of V1--V3.
 
-\begin{table}[H]
+\begin{table}[t]
 \centering
-\caption{Validation performance of the three CNN experiments on DS2.}
+\caption{CNN experiments on DS2. Always predicting ``pathological'' gives 77.18\% test accuracy on the random split and 76.57\% on the block split.}
 \label{tab:cnn-results}
 \small
-\begin{tabular}{lcccc}
+\begin{tabular}{llllcc}
 \toprule
-Model & Accuracy (\%) & Weighted F1 (\%) & Balanced Acc. (\%) & ROC-AUC (\%) \\
+Model & Change & Split & Evaluated on & Accuracy (\%) & Balanced acc. (\%) \\
 \midrule
-CNN V1 & 68.12 & 70.18 & 64.07 & 67.78 \\
-CNN V2 & \textbf{70.47} & \textbf{72.22} & \textbf{66.12} & \textbf{69.07} \\
-CNN V3 & 63.42 & 65.71 & 56.80 & 61.34 \\
+CNN V1 & baseline & random & validation & 68.12 & 64.07 \\
+CNN V2 & normalisation, rotation & random & validation & \textbf{70.47} & \textbf{66.12} \\
+CNN V3 & batch norm., fewer parameters & random & validation & 63.42 & 56.80 \\
+\midrule
+CNN V2 & & random & test & 67.11 & 61.09 \\
+V4 (ResNet18) & pretrained, full image & blocks & test & 62.94 & 65.96 \\
+\midrule
+V5 & box crop, augmentation & blocks & test & 88.46 & 92.47 \\
+V5 (ResNet18) & pretrained & blocks & test & \textbf{90.21} & \textbf{93.61} \\
+V6 & 94K parameters & blocks & test & 88.11 & 92.24 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-CNN V2 achieved the best validation performance across all four metrics. Its improved preprocessing, including image normalisation and random rotation augmentation, may have contributed to better generalisation. CNN V3 reduced the number of trainable parameters by approximately 97\% compared with V2, but achieved lower classification performance.
+CNN V2 was best on all four validation metrics, about seven images ahead of V1 in accuracy, and the much smaller CNN V3 scored lowest. We therefore evaluated CNN V2 on the test set, where it also reached 68.94\% weighted F1 and 67.58\% ROC AUC. Its accuracy is below that of always predicting ``pathological'' (the majority-class baseline).
 
-CNN V2 was selected for independent test evaluation, achieving 67.11\% accuracy, 68.94\% weighted F1-score, 61.09\% balanced accuracy and 67.58\% ROC-AUC. Its test accuracy was lower than its validation accuracy and remained below the 77.18\% majority-class baseline, highlighting limitations in overall classification performance.
+On the block split, the full-image ResNet18 (V4) reached 59.44\% macro F1 and was again below the baseline accuracy; its test set differs from CNN V2's, so the two are not directly comparable. A decision threshold tuned on validation (0.75) did far worse on test (37.41\% accuracy), so we report the default 0.5. With box crops and stronger augmentation the scores rose sharply, to 88--90\% accuracy with no healthy image misclassified, the highest of all our image models. V6 matched V5 with about 140 times fewer parameters, and pretraining mainly made training converge faster. These scores need caution, however. Only pathological images have boxes, and the pretrained V5 predicted ``pathological'' 191 times and ``healthy'' 95 times, exactly the numbers of test images with and without a box (answering ``has a box'' alone gives 90.21\%), so most or all of the gain can be explained by the crop itself.
