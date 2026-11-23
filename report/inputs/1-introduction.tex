@@ -1,8 +1,25 @@
 \section{Introduction}
 
-\emph{Chronic kidney disease} (\glossterm{ckd}{CKD}) affected around \textbf{14\% of adults} worldwide in 2023, about 788 million people, and was the \textbf{ninth leading cause of death}.\cite{gbd2023ckd} Its early stages usually have no symptoms, so many people are diagnosed only after their kidneys are damaged. Standard blood and urine tests, such as \glossterm{creatinine}{creatinine}, \glossterm{haemoglobin}{haemoglobin} and \glossterm{albumin}{albumin}, are already part of normal check-ups, and a \emph{machine learning} model trained on these values could flag likely CKD cases cheaply.
+\emph{Chronic kidney disease} (\glossterm{ckd}{CKD}) affected around \textbf{14\% of adults} worldwide in 2023, about 788 million people, and was the \textbf{ninth leading cause of death}.\cite{gbd2023ckd} Its early stages usually have no symptoms, so many people are diagnosed only after their kidneys are damaged. Standard blood and urine tests, such as \glossterm{creatinine}{creatinine}, \glossterm{haemoglobin}{haemoglobin} and \glossterm{albumin}{albumin}, are already part of normal check-ups. Machine learning models trained on these measurements could help identify patterns associated with CKD and flag patients who may require further investigation.
 
-We use two independent datasets. On a tabular clinical dataset we predict CKD status with four classical classifiers: \hyperref[sec:dt]{Decision Tree}, \hyperref[sec:knn]{kNN}, \hyperref[sec:nb]{Naive Bayes} and \hyperref[sec:rf]{Random Forest}. On the URI-CAD renal ultrasound dataset\cite{uricad2024} we train \hyperref[sec:cnn]{Convolutional Neural Network (CNN)} models, including a pretrained one, to classify images as healthy or pathological. The datasets are not linked, so the two experiments are evaluated separately.
+We use two independent datasets. On a tabular clinical dataset, we predict CKD status using four classical classifiers: \hyperref[sec:dt]{Decision Tree}, \hyperref[sec:knn]{kNN}, \hyperref[sec:nb]{Naive Bayes} and \hyperref[sec:rf]{Random Forest}. On the URI-CAD renal ultrasound dataset\cite{uricad2024}, we train \hyperref[sec:cnn]{Convolutional Neural Network (CNN)} models, including a pretrained architecture, to classify images as healthy or pathological based on their global diagnosis labels. Since the datasets are not linked and address different prediction tasks, the experiments are evaluated separately.
 
-We ask which classical model predicts CKD best; which features matter most; whether unsupervised \emph{clustering} groups patients in a way that matches the CKD diagnosis; and how well CNN models classify healthy and pathological kidney ultrasound images.
+The study is guided by four research questions:
 
+\begin{enumerate}
+    \item \textbf{RQ1: Which classical machine learning model performs best in predicting CKD?}
+
+    Different classifiers may identify patterns in clinical measurements differently. Comparing their performance helps determine which approach is most suitable for this dataset.
+
+    \item \textbf{RQ2: Which clinical features are most important for CKD prediction?}
+
+    Identifying influential features helps explain model predictions and highlights which clinical measurements provide the most useful information for classification.
+
+    \item \textbf{RQ3: To what extent do unsupervised clustering methods identify patient groups that correspond to CKD diagnosis?}
+
+    This examines whether meaningful patient groupings can be found using clinical measurements without providing diagnosis labels during clustering.
+
+    \item \textbf{RQ4: How effectively can CNN models classify renal ultrasound images as healthy or pathological?}
+
+    Comparing different CNN configurations allows us to investigate how image preprocessing, architecture choices and transfer learning affect classification performance.
+\end{enumerate}

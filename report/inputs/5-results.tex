@@ -41,13 +41,13 @@ The final tree (\fref{fig:tree}) uses only haemoglobin, specific gravity and alb
 \label{fig:tree}
 \end{figure}
 
-\paragraph{Neural networks.}
 
-\tref{tab:cnn-results} lists all CNN experiments; \fref{fig:cnn} shows the other validation metrics of V1--V3.
+\paragraph{Neural networks.}
+\tref{tab:cnn-results} summarises the CNN experiments, while \fref{fig:cnn} shows the remaining validation metrics for V1--V3.
 
 \begin{table}[t]
 \centering
-\caption{CNN experiments on DS2. Always predicting ``pathological'' gives 77.18\% test accuracy on the random split and 76.57\% on the block split.}
+\caption{CNN validation and test results on DS2. The majority-class baseline gives 77.18\% test accuracy on the random split and 76.57\% on the block split. Test results use the default threshold of 0.5.}
 \label{tab:cnn-results}
 \small
 \begin{tabular}{llllcc}
@@ -68,6 +68,11 @@ V6 & 94K parameters & blocks & test & 88.11 & 92.24 \\
 \end{tabular}
 \end{table}
 
-CNN V2 was best on all four validation metrics, about seven images ahead of V1 in accuracy, and the much smaller CNN V3 scored lowest. We therefore evaluated CNN V2 on the test set, where it also reached 68.94\% weighted F1 and 67.58\% ROC AUC. Its accuracy is below that of always predicting ``pathological'' (the majority-class baseline).
+CNN V2 achieved the best results across all four validation metrics, with about seven more correctly classified images than V1. V3 had the lowest scores despite having fewer parameters. We therefore selected V2 for test evaluation, where it achieved 67.11\% accuracy, 68.94\% weighted F1 and 67.58\% ROC AUC. Its accuracy was below the majority-class baseline.
 
-On the block split, the full-image ResNet18 (V4) reached 59.44\% macro F1 and was again below the baseline accuracy; its test set differs from CNN V2's, so the two are not directly comparable. A decision threshold tuned on validation (0.75) did far worse on test (37.41\% accuracy), so we report the default 0.5. With box crops and stronger augmentation the scores rose sharply, to 88--90\% accuracy with no healthy image misclassified, the highest of all our image models. V6 matched V5 with about 140 times fewer parameters, and pretraining mainly made training converge faster. These scores need caution, however. Only pathological images have boxes, and the pretrained V5 predicted ``pathological'' 191 times and ``healthy'' 95 times, exactly the numbers of test images with and without a box (answering ``has a box'' alone gives 90.21\%), so most or all of the gain can be explained by the crop itself.
+On the block split, CNN V4 achieved 62.94\% accuracy, 65.96\% balanced accuracy and 59.44\% macro F1. Its accuracy was below the block-split baseline of 76.57\%. The test set differs from that of V2, so their results are not directly comparable. The threshold selected on validation (0.75) resulted in only 37.41\% test accuracy; the table therefore reports the default threshold of 0.5.
+
+With ROI cropping and stronger augmentation, V5, V5-TL and V6 achieved 88--90\% accuracy and 92--94\% balanced accuracy. All 67 healthy test images were correctly classified by these three models at the default threshold. V6 achieved similar results to V5 with about 138 times fewer parameters. V5-TL stopped after two head-only and three fine-tuning epochs, compared with nine epochs for V5 trained from scratch.
+
+These results need careful interpretation. Bounding boxes were available only for pathological images, although not all pathological images had boxes. V5-TL predicted 191 images as pathological and 95 as healthy, matching the numbers of boxed and unboxed test images. A simple rule based on box availability alone also achieved 90.21\% accuracy on this split. This raises concerns that the high scores may partly reflect the availability of annotations rather than image features associated with pathology.
+
